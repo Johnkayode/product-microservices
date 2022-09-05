@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  products_admin:
+    build: ./products_admin
+    command: bash -c "python3 ./products_admin/manage.py migrate && python3 ./products_admin/manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - 8000:8000
+    restart: always
+    env_file:
+      - ./.env
+    depends_on:
+       - admin_db
+
+  admin_db:
+    image: postgres
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - admin_db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  admin_db:
