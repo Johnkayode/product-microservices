@@ -24,5 +24,30 @@ services:
     ports:
       - 5432:5432
 
+  products_user:
+    build: ./products_user
+    command: bash -c "python3 ./products_user/app.py"
+    volumes:
+      - .:/user_app
+    ports:
+      - 5000:5000
+    restart: always
+    env_file:
+      - ./.env
+    depends_on:
+       - user_db
+
+
+  user_db:
+    image: mysql:5.7.22
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - user_db:/var/lib/mysql
+    ports:
+      - 3306:3306
+
 volumes:
   admin_db:
+  user_db:
